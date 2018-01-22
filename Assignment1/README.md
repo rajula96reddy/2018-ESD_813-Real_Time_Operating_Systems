@@ -8,10 +8,10 @@ The input ECG data file is [here](Samples.xlsx)
 - Depending on the window size inputted the curve changes which can become smoother or harder.
 
 ##### Plot of given Data
-![]()
+![](Input.png)
 
 ##### Plot of smoothened Data
-![]()
+![](Output.png)
 
 #### Finding Peaks
 - To find the peaks, I used the simplest of all methods i.e to find the local maxima comparing it to a set of given number of neigbouring points and with a given threshold.
