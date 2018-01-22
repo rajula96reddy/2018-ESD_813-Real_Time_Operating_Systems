@@ -1,6 +1,6 @@
 # RTOS Assignment 1
 For a given ECG signal, smoothen the curve, find the peaks and count the number of heartbeats using C.
-The input ECG data file is [here]()
+The input ECG data file is [here](Samples.xlsx)
 
 #### Smoothening the Data
 - Used a window smoothening method which takes mean of a given neighbouring points for every point and re-plos
