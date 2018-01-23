@@ -1,46 +1,40 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
-void average(int *array, int window)
+void average(int *array, int window) //Function to average a number based on it's neighbours for the given size of the window
 {
-    for (int j=(window/2);j<(5686-(window/2));j++)
+    for (int j=(window/2);j<(5686-(window/2));j++) //Ignore the numbers in the first & last as they don't have neighbours on both sides
     {
-      // printf("%d\n", j);
       int newValue = 0;
-      for (int i=j-(window/2);i<=j+(window/2);i++)
+      for (int i=j-(window/2);i<=j+(window/2);i++) //Neigbours for a given number
       {
-        // printf("i is %d\n", i);
         newValue = newValue + array[i];
       }
-      // printf("%d\n", newValue);
-      array[j] = newValue/window;
+      array[j] = newValue/window; //Change the data itself
     }
 }
-int peaks(int *Data, int window)
+int peaks(int *Data, int window) //Function to find the peaks for a given data and choosen size of window
 {
-    int count = 0;
-    int flag1 = 0;
+    int count = 0; //Peaks count
+    int flag1 = 0; //Flag to
     int flag2 = 0;
-    for (int j=(window/2);j<(5686-(window/2));j++)
+    for (int j=(window/2);j<(5686-(window/2));j++) //Ignore the first & last numbers as they don't have neighbours on both the sides
     {
-      // printf("%d\n", j);
+      //Flags to identify peaks
       flag1 = 0;
       flag2 = 0;
       int newValue = 0;
-      for (int i=j-(window/2);i<=j+(window/2);i++)
+      for (int i=j-(window/2);i<=j+(window/2);i++) //Run iteration to give values to both the flags
       {
-          // printf("i is %d & j is %d\rn",i,j);
-          if(i<j && Data[j]>=520 && Data[i]!=Data[j])
+          if(i<j && Data[j]>=520 && Data[i]!=Data[j]) //520 is the threshold for the peak which is given on observation
           {
             if(Data[i]<Data[j])
             {
               flag1 = flag1 + 1;
               continue;
-              // printf("data[i] is %d & data[j] is %d\n",Data[i],Data[j]);
             }
             else
               break;
-              // print Data[j]
           }
           else if(i>j && Data[j]>=520)
           {
@@ -48,33 +42,26 @@ int peaks(int *Data, int window)
             {
               flag2 = flag2 + 1;
               continue;
-              // printf("data[i] is %d & data[j] is %d\n",Data[i],Data[j]);
             }
             else
               break;
           }
       }
-      if (flag1 == (window)/2 && flag2 == (window)/2)
+      if (flag1 == (window)/2 && flag2 == (window)/2) //Evaluate the flags & incremet counter if it's a peak
       {
-        // printf("%d %d\n",flag1,flag2 );
         count = count + 1;
-        // printf("%d\n", j);
       }
-      // printf("%d\n", newValue);
-      // array[j] = newValue/window;
     }
     return count;
 }
 int main(int argc, char *argv[])
 {
     FILE *readFile, *writeFile;
-    readFile = fopen("Samples.csv","r");
-    writeFile = fopen("Output.csv", "w");
+    readFile = fopen("Samples.csv","r"); //Input file
+    writeFile = fopen("Output.csv", "w"); //Output file
     if(readFile == NULL || writeFile == NULL)
       return -1;
-    //printf(readFile, "%d\n");
     int ch;
-    char value;
     ch = fgetc(readFile);
     int Data[5686];
     char buff[10];
@@ -85,30 +72,17 @@ int main(int argc, char *argv[])
         count = count+1;
     }
     fclose(readFile);
-    // for (size_t i = 0; i < 7; i++) {
-    //   printf("%d\n", Data[i]);
-    // }
-    // printf("%d\n",count);
-    // printf("%d\n",Data[3]);
-    average(Data, atoi(argv[1]));
-    // printf("%d\n", Data[3]);
+    average(Data, atoi(argv[1])); //Smoothen data
     for (int i=0; i<5686; i++)
     {
-      // snprintf(buff, 10, "%d", Data[i]);
-      // printf("%s\n", buff);
-      fprintf(writeFile, "%d\n", Data[i]);
-      // fwrite(&Data[i], sizeof(Data[i]), 1, writeFile);
-      // printf("%d\n", Data[i]);
-    }
+      fprintf(writeFile, "%d\n", Data[i]);    }
     int Data_New[5686];
-    // char buff[10];
     count = 0;
     fclose(writeFile);
-    readFile = fopen("Output.csv","r");
+    readFile = fopen("Output.csv","r"); //Read smoothen data for finding peaks
     while (fgets(buff,sizeof(buff),readFile) != NULL)
     {
         int a = atoi(buff);
-        // printf("%d\n",a );
         Data_New[count] = a;
         count = count+1;
     }
