@@ -25,7 +25,7 @@ void interrupt_handler()
 void main()
 {
 	wiringPiSetup(); //setup the library
-	pinMode (INT_PIN, INTPUT); //set mode of pin_0
+	pinMode (INT_PIN, INPUT); //set mode of pin_0
 	pinMode (READ_PIN_1, OUTPUT); //set mode of pin_1
 	pinMode (READ_PIN_2, OUTPUT); //set mode of pin_2
 	pinMode (READ_PIN_3, OUTPUT); //set mode of pin_3
