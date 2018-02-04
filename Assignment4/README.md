@@ -1,5 +1,7 @@
 ## Assignment 4
 ## Experiment with Address Space of a Thread
+This code creates three threads & plays around with the local & global var.
+To compile ```gcc -o thread.c -lpthread ```
 ### Observations
 
 First time
@@ -62,4 +64,4 @@ Values of variables
 1. The values of i, j & k are changing for every iteration and also most of the values are same. This is because the local variables are not properly initialized hence some junk values.
 2. The order in which the print statements are changin everytime, it is just due to way it is scheduled.
 3. The addresses of the local variables are changing every iteration while the global variables addresses are not. In multi threading, the threads share common parts such as data, heap & text except the stack. As global variables are stored on the heap, the addresses are same for all. While the local variables are stored in the stack which is different from thread to thread so they are not the same.
-4. The values of global variables are not desired, they randomly change every iteration. It is because, as the global variables are all present in the heap portion which is the common part for all the threads & all the threads are simulataneously write & reading the values. There is no synchronization, & there is a race condition of who writes & who reads. So when the threads are printing, it is read some other threads write. Hence the undesired output. The solution for this is to use mutex locks. 
+4. The values of global variables are not desired, they randomly change every iteration. It is because, as the global variables are all present in the heap portion which is the common part for all the threads & all the threads are simulataneously write & reading the values. There is no synchronization, & there is a race condition of who writes & who reads. So when the threads are printing, it is read some other threads write. Hence the undesired output. The solution for this is to use mutex locks.

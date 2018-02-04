@@ -1,5 +1,7 @@
 ## Assignment 3
 ## Experiment with Address Space of a Process
+This code forks three child processes & plays around with local & global variables. Each child & the parent adds a kill command with it's pid to Kill.sh bash script.
+To compile ```gcc process.c``` 
 ### Observations
 
 First time
