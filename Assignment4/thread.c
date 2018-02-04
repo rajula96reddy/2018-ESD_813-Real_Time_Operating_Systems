@@ -13,7 +13,7 @@ void *Thread1Proc() //print address of the three local variables j, k and l
   c = 6;
   printf("Thread 1: Address of i is %p, j is %p & k is %p\n", &i, &j, &k);
   printf("Thread 1: Address of a is %p, b is %p & c is %p\n", &a, &b, &c);
-  // for(int i=1; i<5; i++)
+  while(1)
   {
     printf("Thread 1 - Value of i is %d, j is %d & k is %d\n", i, j, k);
     printf("Thread 1 - Value of a is %d, b is %d & c is %d\n", a, b, c);
@@ -27,7 +27,7 @@ void *Thread2Proc() //print address of the three local variables j, k and l
   c = 9;
   printf("Thread 2: Address of i is %p, j is %p & k is %p\n", &i, &j, &k);
   printf("Thread 2: Address of a is %p, b is %p & c is %p\n", &a, &b, &c);
-  // for(int i=1; i<5; i++)
+  while(1)
   {
     printf("Thread 2 - Value of i is %d, j is %d & k is %d\n", i, j, k);
     printf("Thread 2 - Value of a is %d, b is %d & c is %d\n", a, b, c);
@@ -41,7 +41,7 @@ void *Thread3Proc() //print address of the three local variables j, k and l
   c = 12;
   printf("Thread 3: Address of i is %p, j is %p & k is %p\n", &i, &j, &k);
   printf("Thread 3: Address of a is %p, b is %p & c is %p\n", &a, &b, &c);
-  // for(int i=1; i<5; i++)
+  while(1)
   {
     printf("Thread 3 - Value of i is %d, j is %d & k is %d\n", i, j, k);
     printf("Thread 3 - Value of a is %d, b is %d & c is %d\n", a, b, c);
