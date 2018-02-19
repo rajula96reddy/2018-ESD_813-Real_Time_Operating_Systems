@@ -1,124 +1,94 @@
-/*
-** client.c -- a stream socket client demo
-*/
-
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
-#include <string.h>
-#include <netdb.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include <arpa/inet.h>
-#include<signal.h>
-
-/* Signal Handler for graceful exit */
-void my_handler_for_sigint(int signumber)
+#include <pthread.h> //pthread definition file
+int sockfd = 0,n = 0;
+char sendBuff[1024];
+void *Thread1Proc() //print address of the three local variables j, k and l
 {
-  char ans[2];
-  if (signumber == SIGINT)
+  while(1)
   {
-    printf("received SIGINT\n");
-    printf("Program received a CTRL-C\n");
-    printf("Terminate Y/N : ");
-    scanf("%s", ans);
-    if (strcmp(ans,"Y") == 0)
+  fgets(sendBuff, sizeof sendBuff, stdin);
+  // printf("wrote\n");
+      // strcpy(sendBuff, "Message from server");
+    write(sockfd, sendBuff, strlen(sendBuff));
+  }
+}
+char recvBuff[1024];
+void *Thread2Proc() //print address of the three local variables j, k and l
+{
+  while(1)
+  {
+    // printf("read\n");
+  int n = 0;
+  while((n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
     {
-       printf("Existing ....\n");
-       exit(0);
+      recvBuff[n] = 0;
+      printf("Message from server:");
+      if(fputs(recvBuff, stdout) == EOF)
+    {
+      printf("\n Error : Fputs error");
     }
-    else
+      // printf("\n");
+    }
+
+  if( n < 0)
     {
-       printf("Continung ..\n");
+      printf("\n Read Error \n");
     }
   }
 }
-
-/* Get sockaddr, IPv4 or IPv6: */
-void *get_in_addr(struct sockaddr *sa)
+int main(void)
 {
-    if (sa->sa_family == AF_INET)
+  struct sockaddr_in serv_addr;
+
+  memset(sendBuff, '0' ,sizeof(sendBuff));
+  memset(recvBuff, '0' ,sizeof(recvBuff));
+  if((sockfd = socket(AF_INET, SOCK_STREAM, 0))< 0)
     {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
+      printf("\n Error : Could not create socket \n");
+      return 1;
     }
+    printf("This is client. Start typing to chat with server\n");
+  serv_addr.sin_family = AF_INET;
+  serv_addr.sin_port = htons(5000);
+  serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
-}
-
-int main(int argc, char *argv[])
+  if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr))<0)
+    {
+      printf("\n Error : Connect Failed \n");
+      return 1;
+    }
+    pthread_t th1, th2;
+  // for(;;)
 {
-    int sockfd; int i =0;
-    char ch[60];
-    struct addrinfo hints, *servinfo, *p;
-    int rv;
-    char s[INET6_ADDRSTRLEN];
-    if (signal(SIGINT, my_handler_for_sigint) == SIG_ERR)
-      		printf("\ncan't catch SIGINT\n");
-    if (argc != 3)
-    {
-        fprintf(stderr,"usage: client hostname\n");
-        exit(1);
-    }
-
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-
-    if ((rv = getaddrinfo(argv[1], argv[2], &hints, &servinfo)) != 0)
-    {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        return 1;
-    }
-
-    /* loop through all the results and connect to the first we can */
-    for(p = servinfo; p != NULL; p = p->ai_next)
-    {
-        if ((sockfd = socket(p->ai_family, p->ai_socktype,p->ai_protocol)) == -1)
-        {
-            perror("client: socket");
-            continue;
-        }
-
-        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1)
-        {
-            close(sockfd);
-            perror("client: connect");
-            continue;
-        }
-
-        break;
-    }
-
-    if (p == NULL) {
-        fprintf(stderr, "client: failed to connect\n");
-        return 2;
-    }
-
-    inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)p->ai_addr),
-            s, sizeof s);
-    printf("client: connecting to %s\n", s);
-
-    freeaddrinfo(servinfo); // all done with this structure
-
-   while(1)
-  {
-    scanf("%s", ch);
-    if (send(sockfd, ch, strlen(ch), 0) == -1)
-	{
-                perror("send");
-            	close(sockfd);
-            	exit(0);
-        }
-
+  pthread_create(&th1, NULL, Thread1Proc, NULL); //Create thread1 & attach function Thread1Proc
+  pthread_create(&th2, NULL, Thread2Proc, NULL); //Create thread1 & attach function Thread1Proc
+  pthread_join(th1,NULL); //start thread
+  pthread_join(th2,NULL); //start thread
+  // printf("read\n");
+// int n = 0;
+// while((n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
+//   {
+//     recvBuff[n] = 0;
+//     if(fputs(recvBuff, stdout) == EOF)
+//   {
+//     printf("\n Error : Fputs error");
+//   }
+//     // printf("\n");
+//   }
+//
+// if( n < 0)
+//   {
+//     printf("\n Read Error \n");
+//   }
 }
-    close(sockfd);
-
-
-  /* A long long wait so that we can easily issue a signal to this process */
-   while(1)
-     sleep(1);
-
-    return 0;
+return 0;
 }
