@@ -11,3 +11,5 @@
 - Change the fields IP address, Subnet, Gateway in **FreeRTOSConfig.h** according to the host settings like in the command **ipconfig**
 - Build the proj and run simulator
 - Ping the IP address from your system in the same network
+
+![](FreeRTOS_demo.PNG)
